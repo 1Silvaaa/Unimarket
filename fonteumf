@@ -1,0 +1,1369 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>UniMarket ERP — Protótipo</title>
+        <style>
+            :root {
+                --navy: #101d38;
+                --navy2: #172b50;
+                --blue: #2457e8;
+                --blue2: #3974ff;
+                --bg: #f3f6fc;
+                --ink: #192943;
+                --muted: #7c8ba5;
+                --line: #e7edf5;
+                --green: #0eaa70;
+                --orange: #e99a22;
+                --red: #e34c55;
+                --white: #fff;
+                --shadow: 0 8px 28px rgba(25,48,86,.06)
+            }
+
+            * {
+                box-sizing: border-box
+            }
+
+            body {
+                margin: 0;
+                background: var(--bg);
+                font: 14px Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+                color: var(--ink)
+            }
+
+            button,input,select {
+                font: inherit
+            }
+
+            button {
+                cursor: pointer;
+                border: 0
+            }
+
+            .app {
+                min-height: 100vh;
+                display: flex
+            }
+
+            .sidebar {
+                width: 238px;
+                background: linear-gradient(180deg,#101a31,#101d38 75%,#173d83);
+                color: #d5deed;
+                padding: 22px 14px;
+                display: flex;
+                flex-direction: column;
+                position: fixed;
+                inset: 0 auto 0 0;
+                z-index: 5
+            }
+
+            .brand {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                padding: 2px 9px 28px
+            }
+
+            .brandmark {
+                width: 39px;
+                height: 39px;
+                border-radius: 12px;
+                background: linear-gradient(145deg,#2d7cff,#123a9e);
+                display: grid;
+                place-items: center;
+                color: white;
+                font-weight: 900;
+                font-size: 19px
+            }
+
+            .brand strong {
+                font-size: 20px;
+                letter-spacing: -.8px;
+                color: #fff
+            }
+
+            .brand strong span {
+                color: #4c91ff
+            }
+
+            .brand small {
+                display: block;
+                color: #9eb0cf;
+                font-size: 8px;
+                letter-spacing: 1.2px;
+                margin-top: 2px
+            }
+
+            .nav-label {
+                font-size: 9px;
+                letter-spacing: 1.3px;
+                color: #7186aa;
+                padding: 13px 12px 7px;
+                font-weight: 800
+            }
+
+            .nav button {
+                width: 100%;
+                background: transparent;
+                color: #b9c7dc;
+                padding: 11px 12px;
+                border-radius: 9px;
+                text-align: left;
+                display: flex;
+                gap: 12px;
+                align-items: center;
+                margin: 2px 0;
+                font-size: 12px
+            }
+
+            .nav button:hover,.nav button.active {
+                background: #244780;
+                color: white
+            }
+
+            .nav .ico {
+                width: 17px;
+                text-align: center;
+                font-size: 15px
+            }
+
+            .sidebottom {
+                margin-top: auto;
+                background: #1b3156;
+                border: 1px solid #314a70;
+                border-radius: 11px;
+                padding: 12px;
+                display: flex;
+                align-items: center;
+                gap: 9px
+            }
+
+            .avatar {
+                width: 31px;
+                height: 31px;
+                border-radius: 50%;
+                background: #dce8ff;
+                color: #2457e8;
+                display: grid;
+                place-items: center;
+                font-weight: 800
+            }
+
+            .sidebottom small {
+                display: block;
+                color: #9fb0ca;
+                font-size: 10px
+            }
+
+            .main {
+                margin-left: 238px;
+                width: calc(100% - 238px);
+                min-width: 0
+            }
+
+            .topbar {
+                height: 66px;
+                background: #fff;
+                border-bottom: 1px solid var(--line);
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 0 30px;
+                position: sticky;
+                top: 0;
+                z-index: 4
+            }
+
+            .crumb {
+                font-size: 11px;
+                color: #8a98ad
+            }
+
+            .topright {
+                display: flex;
+                align-items: center;
+                gap: 12px
+            }
+
+            .company {
+                font-size: 11px;
+                color: #65748d;
+                border: 1px solid var(--line);
+                border-radius: 8px;
+                padding: 9px 11px
+            }
+
+            .iconbtn {
+                background: #f4f7fc;
+                color: #526581;
+                border-radius: 9px;
+                padding: 9px 11px
+            }
+
+            .content {
+                padding: 28px 30px;
+                max-width: 1500px;
+                margin: auto
+            }
+
+            .pagehead {
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-start;
+                margin-bottom: 23px;
+                gap: 14px
+            }
+
+            .pagehead h1 {
+                font-size: 23px;
+                margin: 0 0 5px;
+                letter-spacing: -.6px
+            }
+
+            .sub {
+                color: var(--muted);
+                font-size: 12px
+            }
+
+            .btn {
+                border-radius: 8px;
+                padding: 10px 14px;
+                font-size: 12px;
+                font-weight: 700;
+                background: var(--blue);
+                color: white;
+                box-shadow: 0 3px 8px #2457e825
+            }
+
+            .btn:hover {
+                background: #1747d0
+            }
+
+            .btn.secondary {
+                background: #fff;
+                color: #40516c;
+                border: 1px solid var(--line);
+                box-shadow: none
+            }
+
+            .btn.danger {
+                background: #fff1f1;
+                color: #d13f49;
+                box-shadow: none
+            }
+
+            .btn.small {
+                padding: 7px 10px;
+                font-size: 11px
+            }
+
+            .grid {
+                display: grid;
+                gap: 15px
+            }
+
+            .stats {
+                grid-template-columns: repeat(4,minmax(0,1fr));
+                margin-bottom: 16px
+            }
+
+            .card {
+                background: white;
+                border: 1px solid var(--line);
+                border-radius: 13px;
+                padding: 18px;
+                box-shadow: var(--shadow);
+                min-width: 0
+            }
+
+            .stat-top {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                color: #8190a7;
+                font-size: 11px
+            }
+
+            .stat-icon {
+                width: 32px;
+                height: 32px;
+                border-radius: 9px;
+                background: #edf3ff;
+                color: var(--blue);
+                display: grid;
+                place-items: center
+            }
+
+            .stat-value {
+                font-size: 24px;
+                font-weight: 800;
+                letter-spacing: -.7px;
+                margin: 12px 0 5px
+            }
+
+            .positive {
+                color: var(--green);
+                font-size: 10px;
+                font-weight: 700
+            }
+
+            .negative {
+                color: var(--red);
+                font-size: 10px;
+                font-weight: 700
+            }
+
+            .two {
+                grid-template-columns: 1.2fr 1fr;
+                margin-bottom: 16px
+            }
+
+            .card-title {
+                font-size: 13px;
+                font-weight: 800;
+                margin: 0 0 16px
+            }
+
+            .chart {
+                height: 180px;
+                display: flex;
+                align-items: end;
+                gap: 13px;
+                padding: 8px 5px 0;
+                border-bottom: 1px solid var(--line);
+                background: repeating-linear-gradient(to bottom,transparent 0,transparent 43px,#f0f3f8 44px)
+            }
+
+            .barcol {
+                height: 100%;
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                justify-content: end;
+                align-items: center;
+                gap: 7px;
+                color: #8593a9;
+                font-size: 10px
+            }
+
+            .bar {
+                width: 100%;
+                max-width: 42px;
+                border-radius: 6px 6px 2px 2px;
+                background: #b9cdf8
+            }
+
+            .bar.highlight {
+                background: var(--blue)
+            }
+
+            .channel {
+                margin: 17px 0
+            }
+
+            .channel-line {
+                display: flex;
+                justify-content: space-between;
+                font-size: 11px;
+                margin-bottom: 7px
+            }
+
+            .track {
+                height: 7px;
+                background: #edf1f7;
+                border-radius: 10px;
+                overflow: hidden
+            }
+
+            .fill {
+                height: 100%;
+                border-radius: 10px
+            }
+
+            .bottomgrid {
+                grid-template-columns: 1.8fr 1fr
+            }
+
+            .tablewrap {
+                overflow: auto
+            }
+
+            table {
+                border-collapse: collapse;
+                width: 100%;
+                white-space: nowrap
+            }
+
+            th {
+                text-align: left;
+                font-size: 10px;
+                color: #8795aa;
+                font-weight: 700;
+                padding: 11px 9px;
+                border-bottom: 1px solid var(--line)
+            }
+
+            td {
+                padding: 12px 9px;
+                border-bottom: 1px solid #f0f3f8;
+                font-size: 11px;
+                color: #41516b
+            }
+
+            tr:last-child td {
+                border: 0
+            }
+
+            tbody tr:hover {
+                background: #f8faff
+            }
+
+            .status {
+                display: inline-flex;
+                padding: 5px 8px;
+                border-radius: 6px;
+                font-size: 10px;
+                font-weight: 700
+            }
+
+            .s-green {
+                background: #e7f8f1;
+                color: #079b67
+            }
+
+            .s-orange {
+                background: #fff4e4;
+                color: #c77a0b
+            }
+
+            .s-red {
+                background: #ffeded;
+                color: #d34750
+            }
+
+            .s-blue {
+                background: #eaf1ff;
+                color: #2860d8
+            }
+
+            .toolbar {
+                display: flex;
+                gap: 9px;
+                flex-wrap: wrap;
+                margin-bottom: 16px
+            }
+
+            .field {
+                border: 1px solid #dfe6f0;
+                border-radius: 8px;
+                padding: 10px 12px;
+                background: #fff;
+                color: #34445c;
+                outline: none;
+                min-width: 0
+            }
+
+            .field:focus {
+                border-color: #7ca1ff;
+                box-shadow: 0 0 0 3px #2457e815
+            }
+
+            .search {
+                flex: 1;
+                min-width: 190px
+            }
+
+            .pill {
+                border: 1px solid var(--line);
+                background: white;
+                color: #64738b;
+                padding: 9px 12px;
+                border-radius: 8px;
+                font-size: 11px
+            }
+
+            .pill.active {
+                background: #eaf1ff;
+                border-color: #cbdcff;
+                color: #2457e8;
+                font-weight: 800
+            }
+
+            .productname {
+                font-weight: 700;
+                color: #253650
+            }
+
+            .productmeta {
+                font-size: 10px;
+                color: #8a98ad;
+                margin-top: 4px
+            }
+
+            .rowactions {
+                display: flex;
+                gap: 5px
+            }
+
+            .tablebtn {
+                background: #edf3ff;
+                color: #2457e8;
+                padding: 6px 8px;
+                border-radius: 6px;
+                font-size: 11px
+            }
+
+            .alert {
+                border: 1px solid #f4dfb9;
+                background: #fffaf1;
+                color: #91621d;
+                padding: 12px;
+                border-radius: 9px;
+                font-size: 11px;
+                margin-bottom: 15px
+            }
+
+            .modalback {
+                position: fixed;
+                inset: 0;
+                background: #0b17308c;
+                z-index: 20;
+                display: none;
+                align-items: center;
+                justify-content: center;
+                padding: 18px
+            }
+
+            .modalback.show {
+                display: flex
+            }
+
+            .modal {
+                width: min(560px,100%);
+                background: #fff;
+                border-radius: 16px;
+                padding: 23px;
+                box-shadow: 0 25px 80px #07142d45;
+                max-height: 90vh;
+                overflow: auto
+            }
+
+            .modalhead {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 18px
+            }
+
+            .modalhead h2 {
+                font-size: 18px;
+                margin: 0
+            }
+
+            .formgrid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 13px
+            }
+
+            .formgroup {
+                display: flex;
+                flex-direction: column;
+                gap: 6px
+            }
+
+            .formgroup.full {
+                grid-column: 1/-1
+            }
+
+            .formgroup label {
+                font-size: 11px;
+                font-weight: 700;
+                color: #52617a
+            }
+
+            .formgroup input,.formgroup select {
+                width: 100%
+            }
+
+            .modalfoot {
+                display: flex;
+                justify-content: flex-end;
+                gap: 8px;
+                margin-top: 20px
+            }
+
+            .toast {
+                position: fixed;
+                right: 24px;
+                bottom: 24px;
+                background: #14294b;
+                color: #fff;
+                padding: 13px 17px;
+                border-radius: 10px;
+                box-shadow: var(--shadow);
+                font-size: 12px;
+                z-index: 30;
+                display: none
+            }
+
+            .toast.show {
+                display: block
+            }
+
+            .detailgrid {
+                grid-template-columns: 1fr 1fr
+            }
+
+            .detailrow {
+                display: flex;
+                justify-content: space-between;
+                border-bottom: 1px solid #eff2f7;
+                padding: 12px 0;
+                font-size: 12px
+            }
+
+            .detailrow span:first-child {
+                color: #8290a5
+            }
+
+            .market-card {
+                display: flex;
+                align-items: center;
+                gap: 13px
+            }
+
+            .market-logo {
+                width: 43px;
+                height: 43px;
+                border-radius: 12px;
+                display: grid;
+                place-items: center;
+                font-weight: 900;
+                font-size: 16px;
+                color: #25334c
+            }
+
+            .market-info {
+                flex: 1
+            }
+
+            .market-info strong {
+                font-size: 13px
+            }
+
+            .market-info small {
+                display: block;
+                color: #8996aa;
+                margin-top: 4px;
+                font-size: 10px
+            }
+
+            .toggle {
+                accent-color: var(--blue);
+                width: 17px;
+                height: 17px
+            }
+
+            .progress {
+                height: 8px;
+                border-radius: 10px;
+                background: #edf1f7;
+                overflow: hidden
+            }
+
+            .progress span {
+                display: block;
+                height: 100%;
+                background: var(--blue)
+            }
+
+            .donut-wrap {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 26px;
+                min-height: 190px;
+                flex-wrap: wrap
+            }
+
+            .donut {
+                width: 154px;
+                height: 154px;
+                border-radius: 50%;
+                background: conic-gradient(#f8c500 0 42%,#ef9a35 42% 70%,#ed6251 70% 88%,#2871e8 88% 100%);
+                position: relative;
+                flex: none
+            }
+
+            .donut:after {
+                content: "";
+                position: absolute;
+                inset: 27px;
+                background: #fff;
+                border-radius: 50%
+            }
+
+            .donut-center {
+                position: absolute;
+                inset: 0;
+                z-index: 1;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-direction: column;
+                font-weight: 800;
+                font-size: 19px
+            }
+
+            .donut-center small {
+                font-size: 9px;
+                color: #8996aa;
+                font-weight: 600;
+                margin-top: 3px
+            }
+
+            .legend {
+                min-width: 145px;
+                flex: 1;
+                max-width: 220px
+            }
+
+            .legend-item {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                margin: 12px 0;
+                font-size: 11px;
+                color: #65748b
+            }
+
+            .legend-dot {
+                width: 9px;
+                height: 9px;
+                border-radius: 3px;
+                flex: none
+            }
+
+            .legend-item b {
+                margin-left: auto;
+                color: #34445c
+            }
+
+            .premium-tag {
+                display: inline-flex;
+                align-items: center;
+                gap: 5px;
+                background: #f1eaff;
+                color: #7850c8;
+                border: 1px solid #e4d7ff;
+                border-radius: 20px;
+                padding: 5px 9px;
+                font-size: 9px;
+                font-weight: 800;
+                letter-spacing: .5px
+            }
+
+            .premium-hero {
+                background: linear-gradient(120deg,#111e3b,#1d3b73 68%,#315fc2);
+                color: #fff;
+                border: 0
+            }
+
+            .premium-hero .sub {
+                color: #c3d2f1
+            }
+
+            .premium-hero .stat-value {
+                color: #fff
+            }
+
+            .finance-kpi {
+                font-size: 22px;
+                font-weight: 800;
+                letter-spacing: -.6px;
+                margin: 9px 0 4px
+            }
+
+            .dre-table td:last-child,.dre-table th:last-child {
+                text-align: right
+            }
+
+            .dre-total td {
+                font-weight: 800;
+                background: #f6f8fc;
+                color: #1b2c49
+            }
+
+            .dre-positive {
+                color: #079b67!important
+            }
+
+            .dre-negative {
+                color: #d34750!important
+            }
+
+            .login {
+                min-height: 100vh;
+                display: grid;
+                grid-template-columns: 1.1fr .9fr;
+                background: white
+            }
+
+            .loginleft {
+                padding: 8vh 10%;
+                display: flex;
+                flex-direction: column;
+                justify-content: center
+            }
+
+            .loginright {
+                background: linear-gradient(145deg,#07112e,#102d68 65%,#07132f);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                text-align: center;
+                padding: 30px
+            }
+
+            .loginright h1 {
+                font-size: 48px;
+                letter-spacing: -2px;
+                margin: 10px
+            }
+
+            .loginright p {
+                color: #b7c8eb;
+                letter-spacing: 2px;
+                font-size: 10px
+            }
+
+            .loginform {
+                max-width: 390px;
+                width: 100%;
+                margin: auto
+            }
+
+            .loginform h2 {
+                font-size: 30px;
+                margin: 0 0 8px
+            }
+
+            .loginform p {
+                color: #8492a8;
+                font-size: 12px;
+                margin-bottom: 28px
+            }
+
+            .loginform label {
+                display: block;
+                font-size: 11px;
+                font-weight: 700;
+                margin: 15px 0 7px
+            }
+
+            .loginform input {
+                width: 100%;
+                padding: 13px
+            }
+
+            .loginform .btn {
+                width: 100%;
+                margin-top: 20px;
+                padding: 13px
+            }
+
+            .hidden {
+                display: none!important
+            }
+
+            @media(max-width: 900px) {
+                .sidebar {
+                    width:72px;
+                    padding: 16px 8px
+                }
+
+                .brand {
+                    padding: 4px 8px 24px
+                }
+
+                .brand>div:last-child,.nav-label,.nav button .navtext,.sidebottom>div:last-child {
+                    display: none
+                }
+
+                .nav button {
+                    justify-content: center;
+                    padding: 12px 5px
+                }
+
+                .nav button .ico {
+                    font-size: 18px
+                }
+
+                .sidebottom {
+                    justify-content: center;
+                    padding: 8px
+                }
+
+                .main {
+                    margin-left: 72px;
+                    width: calc(100% - 72px)
+                }
+
+                .stats {
+                    grid-template-columns: repeat(2,1fr)
+                }
+
+                .content {
+                    padding: 20px
+                }
+
+                .topbar {
+                    padding: 0 20px
+                }
+
+                .bottomgrid,.two {
+                    grid-template-columns: 1fr
+                }
+            }
+
+            @media(max-width: 600px) {
+                .stats {
+                    grid-template-columns:1fr 1fr;
+                    gap: 9px
+                }
+
+                .stat-value {
+                    font-size: 19px
+                }
+
+                .content {
+                    padding: 16px 12px
+                }
+
+                .topbar {
+                    height: 56px;
+                    padding: 0 12px
+                }
+
+                .company {
+                    display: none
+                }
+
+                .pagehead {
+                    align-items: center
+                }
+
+                .pagehead h1 {
+                    font-size: 19px
+                }
+
+                .card {
+                    padding: 13px
+                }
+
+                .login {
+                    grid-template-columns: 1fr
+                }
+
+                .loginright {
+                    display: none
+                }
+
+                .formgrid {
+                    grid-template-columns: 1fr
+                }
+
+                .formgroup.full {
+                    grid-column: auto
+                }
+
+                .detailgrid {
+                    grid-template-columns: 1fr
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div id="login" class="login">
+            <section class="loginleft">
+                <div class="loginform">
+                    <div class="brand" style="padding:0 0 35px">
+                        <div class="brandmark">U</div>
+                        <div>
+                            <strong style="color:#10234d">
+                                Uni<span style="color:#2457e8">Market</span>
+                            </strong>
+                            <small style="color:#8290a5">GESTÃO INTELIGENTE DE MARKETPLACES</small>
+                        </div>
+                    </div>
+                    <h2>Bem-vindo de volta!</h2>
+                    <p>Centralize suas vendas. Simplifique sua gestão. Multiplique seus resultados.</p>
+                    <label>E-mail</label>
+                    <input id="email" class="field" type="email" value="admin@unimarket.com.br" placeholder="Digite seu e-mail">
+                    <label>Senha</label>
+                    <input id="password" class="field" type="password" value="unimarket123" placeholder="Digite sua senha">
+                    <button class="btn" onclick="enterApp()">Entrar no UniMarket</button>
+                    <p style="text-align:center;margin-top:15px">Acesso demonstrativo: qualquer e-mail e senha.</p>
+                </div>
+            </section>
+            <section class="loginright">
+                <div>
+                    <div style="font-size:82px">🛒</div>
+                    <h1>
+                        Uni<span style="color:#2990ff">Market</span>
+                    </h1>
+                    <p>CENTRALIZE. GERENCIE. VENDA MAIS.</p>
+                    <div style="margin-top:65px;color:#8ca7d8;font-size:11px">UM ÚNICO LUGAR PARA TODA A SUA OPERAÇÃO</div>
+                </div>
+            </section>
+        </div>
+        <div id="app" class="app hidden">
+            <aside class="sidebar">
+                <div class="brand">
+                    <div class="brandmark">U</div>
+                    <div>
+                        <strong>
+                            Uni<span>Market</span>
+                        </strong>
+                        <small>ERP MULTICANAL</small>
+                    </div>
+                </div>
+                <nav class="nav" id="nav"></nav>
+                <div class="sidebottom">
+                    <div class="avatar">JS</div>
+                    <div>
+                        <strong style="font-size:11px;color:#fff">João Silva</strong>
+                        <small>Administrador</small>
+                    </div>
+                </div>
+            </aside>
+            <main class="main">
+                <header class="topbar">
+                    <div>
+                        <div style="font-weight:800;font-size:13px" id="topTitle">Dashboard</div>
+                        <div class="crumb">
+                            UniMarket / <span id="crumb">Visão geral</span>
+                        </div>
+                    </div>
+                    <div class="topright">
+                        <span class="company">▣ &nbsp; Empresa demonstração</span>
+                        <button class="iconbtn" onclick="notify('Você está em dia! Não há novas notificações.')">♧</button>
+                        <div class="avatar">JS</div>
+                    </div>
+                </header>
+                <div class="content" id="content"></div>
+            </main>
+        </div>
+        <div class="modalback" id="modalback" onclick="if(event.target===this)closeModal()">
+            <div class="modal" id="modal"></div>
+        </div>
+        <div class="toast" id="toast"></div>
+        <script>
+            const navGroups = [["VISÃO GERAL", ["Dashboard"]], ["GESTÃO", ["Produtos", "Pedidos", "Estoque", "Gestão de preços"]], ["CANAIS DE VENDA", ["Marketplaces"]], ["ANÁLISES", ["Relatórios"]], ["MÓDULOS ADICIONAIS", ["DRE Gerencial"]], ["SISTEMA", ["Configurações"]]];
+            const icons = {
+                "Dashboard": "▦",
+                "Produtos": "▣",
+                "Pedidos": "🛍",
+                "Estoque": "▤",
+                "Gestão de preços": "＄",
+                "Marketplaces": "▧",
+                "Relatórios": "▥",
+                "DRE Gerencial": "◒",
+                "Configurações": "⚙"
+            };
+            let current = "Dashboard"
+              , period = "Este mês"
+              , filter = "Todos"
+              , query = ""
+              , selectedProduct = null
+              , selectedOrder = null;
+            let products = [{
+                name: "Tênis Nike Air Max 270",
+                sku: "TEN-001",
+                category: "Calçados",
+                price: 549.90,
+                stock: 28,
+                status: "Ativo",
+                channels: ["Mercado Livre", "Amazon", "Shopee"]
+            }, {
+                name: "Mochila Adidas Originals",
+                sku: "MOC-042",
+                category: "Bolsas",
+                price: 289.90,
+                stock: 5,
+                status: "Estoque baixo",
+                channels: ["Mercado Livre", "Magalu"]
+            }, {
+                name: "Fone JBL Tune 510BT",
+                sku: "FON-017",
+                category: "Eletrônicos",
+                price: 199,
+                stock: 0,
+                status: "Inativo",
+                channels: ["Amazon", "Shopee"]
+            }, {
+                name: "Relógio Casio G-Shock",
+                sku: "REL-008",
+                category: "Acessórios",
+                price: 799,
+                stock: 14,
+                status: "Ativo",
+                channels: ["Mercado Livre", "Amazon"]
+            }, {
+                name: "Camiseta Puma Dry Cell",
+                sku: "CAM-093",
+                category: "Vestuário",
+                price: 119.90,
+                stock: 67,
+                status: "Ativo",
+                channels: ["Mercado Livre", "Magalu", "Shopee"]
+            }, {
+                name: "Raquete Wilson Ultra 100",
+                sku: "RAQ-011",
+                category: "Esportes",
+                price: 1249,
+                stock: 3,
+                status: "Estoque baixo",
+                channels: ["Mercado Livre"]
+            }, {
+                name: "Cadeira Gamer Corsair T3",
+                sku: "CAD-055",
+                category: "Móveis",
+                price: 2199,
+                stock: 8,
+                status: "Ativo",
+                channels: ["Amazon", "Magalu"]
+            }];
+            let orders = [{
+                id: "#38291",
+                client: "Ana Costa",
+                market: "Mercado Livre",
+                value: 329.90,
+                status: "Entregue",
+                date: "10/11/2026",
+                product: "Tênis Nike Air Max 270",
+                qty: 1
+            }, {
+                id: "#38290",
+                client: "Bruno Lima",
+                market: "Amazon",
+                value: 189,
+                status: "Em trânsito",
+                date: "10/11/2026",
+                product: "Fone JBL Tune 510BT",
+                qty: 1
+            }, {
+                id: "#38289",
+                client: "Carla Souza",
+                market: "Shopee",
+                value: 74.50,
+                status: "Processando",
+                date: "09/11/2026",
+                product: "Camiseta Puma Dry Cell",
+                qty: 1
+            }, {
+                id: "#38288",
+                client: "Diego Matos",
+                market: "Magalu",
+                value: 512,
+                status: "Entregue",
+                date: "09/11/2026",
+                product: "Mochila Adidas Originals",
+                qty: 2
+            }, {
+                id: "#38287",
+                client: "Eva Rocha",
+                market: "Mercado Livre",
+                value: 95.30,
+                status: "Cancelado",
+                date: "08/11/2026",
+                product: "Relógio Casio G-Shock",
+                qty: 1
+            }];
+            const brl = v => v.toLocaleString("pt-BR", {
+                style: "currency",
+                currency: "BRL"
+            });
+            const statusClass = s => s === "Ativo" || s === "Entregue" || s === "Conectado" ? "s-green" : s === "Estoque baixo" || s === "Em trânsito" ? "s-orange" : s === "Inativo" || s === "Cancelado" ? "s-red" : "s-blue";
+            function enterApp() {
+                document.getElementById("login").classList.add("hidden");
+                document.getElementById("app").classList.remove("hidden");
+                renderNav();
+                go("Dashboard")
+            }
+            function renderNav() {
+                let el = document.getElementById("nav");
+                el.innerHTML = navGroups.map( ([g,items]) => `<div class="nav-label">${g}</div>` + items.map(n => `<button class="${current === n ? "active" : ""}" onclick="go('${n}')"><span class="ico">${icons[n]}</span><span class="navtext">${n}</span></button>`).join("")).join("")
+            }
+            function go(p) {
+                current = p;
+                renderNav();
+                document.getElementById("topTitle").textContent = p;
+                document.getElementById("crumb").textContent = p;
+                renderPage();
+                window.scrollTo(0, 0)
+            }
+            function notify(msg) {
+                let t = document.getElementById("toast");
+                t.textContent = msg;
+                t.classList.add("show");
+                setTimeout( () => t.classList.remove("show"), 3000)
+            }
+            function pageHead(title, sub, action="") {
+                return `<div class="pagehead"><div><h1>${title}</h1><div class="sub">${sub}</div></div>${action}</div>`
+            }
+            function card(title, body) {
+                return `<section class="card"><h3 class="card-title">${title}</h3>${body}</section>`
+            }
+            function renderPage() {
+                let c = document.getElementById("content");
+                let html = "";
+                if (current === "Dashboard") {
+                    let cards = [["Faturamento total", "R$ 148.320", "+12,4%", "↗"], ["Pedidos recebidos", "1.847", "+8,1%", "▣"], ["Produtos ativos", products.filter(p => p.status === "Ativo").length + 305, "+3", "◇"], ["Taxa de devolução", "2,3%", "-0,5%", "↻"]];
+                    html = pageHead("Dashboard", "Bem-vindo de volta, João! Aqui está o resumo da sua operação.", `<select class="field" onchange="period=this.value;renderPage()"><option>Este mês</option><option>Últimos 7 dias</option><option>Últimos 30 dias</option><option>Este ano</option></select>`);
+                    html += `<div class="grid stats">${cards.map( (x, i) => `<div class="card"><div class="stat-top"><span>${x[0]}</span><span class="stat-icon">${x[3]}</span></div><div class="stat-value">${x[1]}</div><span class="positive">${x[2]} em relação ao período anterior</span></div>`).join("")}</div>`;
+                    html += `<div class="grid two">${card("Desempenho de vendas · " + period, `<div style="font-size:23px;font-weight:800;margin-bottom:4px">R$ 148.320</div><div class="positive">↑ 12,4% em relação ao período anterior</div><div class="chart">${[48, 70, 55, 91, 66, 100].map( (v, i) => `<div class="barcol"><div class="bar ${i === 5 ? "highlight" : ""}" style="height:${v}%"></div>${["Jan", "Fev", "Mar", "Abr", "Mai", "Jun"][i]}</div>`).join("")}</div>`)}${card("Participação nas vendas por marketplace", `<div class="donut-wrap"><div class="donut"><div class="donut-center">100%<small>das vendas</small></div></div><div class="legend"><div class="legend-item"><span class="legend-dot" style="background:#f8c500"></span>Mercado Livre <b>42%</b></div><div class="legend-item"><span class="legend-dot" style="background:#ef9a35"></span>Amazon <b>28%</b></div><div class="legend-item"><span class="legend-dot" style="background:#ed6251"></span>Shopee <b>18%</b></div><div class="legend-item"><span class="legend-dot" style="background:#2871e8"></span>Magalu <b>12%</b></div></div></div><div class="sub" style="text-align:center">Distribuição do faturamento no período selecionado</div>`)}</div>`;
+                    html += `<div class="grid bottomgrid">${card("Pedidos recentes", `<div class="tablewrap"><table><thead><tr><th>PEDIDO</th><th>CLIENTE</th><th>MARKETPLACE</th><th>VALOR</th><th>STATUS</th></tr></thead><tbody>${orders.slice(0, 4).map(o => `<tr onclick="openOrder('${o.id}')" style="cursor:pointer"><td><b>${o.id}</b></td><td>${o.client}</td><td>${o.market}</td><td>${brl(o.value)}</td><td><span class="status ${statusClass(o.status)}">${o.status}</span></td></tr>`).join("")}</tbody></table></div><div style="text-align:right;margin-top:13px"><button class="btn secondary small" onclick="go('Pedidos')">Ver todos os pedidos →</button></div>`)}${card("Central de alertas", `<div class="channel">🟠 <b>Estoque baixo</b><div class="sub">Mochila Adidas Originals</div></div><div class="channel">🔵 <b>Novo pedido</b><div class="sub">Shopee · #38289</div></div><div class="channel">🟢 <b>Sincronização concluída</b><div class="sub">Todos os canais atualizados</div></div><div class="channel">🔴 <b>Produto reprovado</b><div class="sub">Mercado Livre</div></div>`)}</div>`;
+                } else if (current === "Produtos") {
+                    html = pageHead("Gestão de produtos", `${products.length} produtos no catálogo central.`, `<button class="btn" onclick="openProductModal()">＋ Novo produto</button>`);
+                    html += `<section class="card"><div class="toolbar"><input class="field search" placeholder="Buscar produto ou SKU..." value="${query}" oninput="query=this.value;renderPage()"><select class="field" onchange="filter=this.value;renderPage()"><option>Todos</option><option>Ativo</option><option>Estoque baixo</option><option>Inativo</option></select><button class="btn secondary" onclick="notify('Exportação demonstrativa preparada.')">↓ Exportar</button></div><div class="tablewrap"><table><thead><tr><th>PRODUTO</th><th>SKU</th><th>CATEGORIA</th><th>PREÇO</th><th>ESTOQUE</th><th>CANAIS</th><th>STATUS</th><th>AÇÕES</th></tr></thead><tbody>${products.filter(p => (filter === "Todos" || p.status === filter) && (p.name.toLowerCase().includes(query.toLowerCase()) || p.sku.toLowerCase().includes(query.toLowerCase()))).map( (p, i) => `<tr><td><span class="productname">${p.name}</span></td><td>${p.sku}</td><td>${p.category}</td><td><b>${brl(p.price)}</b></td><td>${p.stock}</td><td>${p.channels.map(x => x === "Mercado Livre" ? "ML" : x === "Amazon" ? "AMZ" : x === "Shopee" ? "SHP" : "MAG").join(" · ")}</td><td><span class="status ${statusClass(p.status)}">${p.status}</span></td><td><div class="rowactions"><button class="tablebtn" onclick="openProduct('${p.sku}')">Ver</button><button class="tablebtn" onclick="editProduct('${p.sku}')">Editar</button></div></td></tr>`).join("")}</tbody></table></div><div class="sub" style="margin-top:14px">Os dados exibidos são fictícios e destinados à demonstração.</div></section>`;
+                } else if (current === "Pedidos") {
+                    html = pageHead("Central de pedidos", "Acompanhe e gerencie pedidos de todos os marketplaces.");
+                    html += `<div class="grid stats">${[["Total de pedidos", "1.847"], ["Em processamento", "28"], ["Aguardando envio", "16"], ["Entregues", "1.612"]].map(x => `<div class="card"><div class="stat-top">${x[0]}</div><div class="stat-value">${x[1]}</div></div>`).join("")}</div><section class="card"><div class="toolbar"><input class="field search" placeholder="Buscar pedido ou cliente..." value="${query}" oninput="query=this.value;renderPage()"><select class="field" onchange="filter=this.value;renderPage()"><option>Todos</option><option>Entregue</option><option>Em trânsito</option><option>Processando</option><option>Cancelado</option></select></div><div class="tablewrap"><table><thead><tr><th>PEDIDO</th><th>CLIENTE</th><th>CANAL</th><th>DATA</th><th>VALOR</th><th>STATUS</th><th></th></tr></thead><tbody>${orders.filter(o => (filter === "Todos" || o.status === filter) && (o.id + o.client).toLowerCase().includes(query.toLowerCase())).map(o => `<tr><td><b>${o.id}</b></td><td>${o.client}</td><td>${o.market}</td><td>${o.date}</td><td>${brl(o.value)}</td><td><span class="status ${statusClass(o.status)}">${o.status}</span></td><td><button class="tablebtn" onclick="openOrder('${o.id}')">Detalhes</button></td></tr>`).join("")}</tbody></table></div></section>`;
+                } else if (current === "Estoque") {
+                    html = pageHead("Controle de estoque", "Visão consolidada da disponibilidade de produtos.", `<button class="btn" onclick="openMovement()">＋ Movimentar estoque</button>`);
+                    html += `<div class="grid stats">${[["Unidades em estoque", products.reduce( (a, p) => a + p.stock, 0)], ["Estoque baixo", products.filter(p => p.stock > 0 && p.stock <= 5).length], ["Sem estoque", products.filter(p => p.stock === 0).length], ["Produtos monitorados", products.length]].map(x => `<div class="card"><div class="stat-top">${x[0]}</div><div class="stat-value">${x[1]}</div></div>`).join("")}</div><section class="card"><div class="tablewrap"><table><thead><tr><th>PRODUTO</th><th>SKU</th><th>DISPONÍVEL</th><th>NÍVEL DE ESTOQUE</th><th>SITUAÇÃO</th></tr></thead><tbody>${products.map(p => `<tr><td>${p.name}</td><td>${p.sku}</td><td><b>${p.stock} un.</b></td><td style="min-width:140px"><div class="progress"><span style="width:${Math.min(100, p.stock / 70 * 100)}%;background:${p.stock <= 5 ? "#e99a22" : "#2457e8"}"></span></div></td><td><span class="status ${statusClass(p.status)}">${p.stock === 0 ? "Esgotado" : p.stock <= 5 ? "Repor" : "Normal"}</span></td></tr>`).join("")}</tbody></table></div></section>`;
+                } else if (current === "Gestão de preços") {
+                    html = pageHead("Gestão de preços", "Gerencie preços por canal e mantenha suas ofertas competitivas.");
+                    html += `<section class="card"><div class="formgrid"><div class="formgroup full"><label>Produto</label><select class="field" id="priceSku">${products.map(p => `<option value="${p.sku}">${p.name} · ${p.sku}</option>`).join("")}</select></div><div class="formgroup"><label>Novo preço base (R$)</label><input class="field" id="newPrice" type="number" step=".01" placeholder="0,00"></div><div class="formgroup"><label>Aplicar em</label><select class="field" id="priceChannel"><option>Todos os canais</option><option>Mercado Livre</option><option>Amazon</option><option>Shopee</option><option>Magalu</option></select></div></div><div class="alert" style="margin-top:16px">Atenção: em uma integração real, a alteração será enviada aos canais selecionados após confirmação.</div><button class="btn" onclick="applyPrice()">Aplicar atualização de preço</button></section><section class="card" style="margin-top:15px"><h3 class="card-title">Tabela de preços por produto</h3><table><thead><tr><th>PRODUTO</th><th>PREÇO BASE</th><th>MARKETPLACES</th><th>AÇÃO</th></tr></thead><tbody>${products.map(p => `<tr><td>${p.name}</td><td><b>${brl(p.price)}</b></td><td>${p.channels.join(" · ")}</td><td><button class="tablebtn" onclick="document.getElementById('priceSku').value='${p.sku}';document.getElementById('newPrice').value='${p.price}'">Selecionar</button></td></tr>`).join("")}</tbody></table></section>`;
+                } else if (current === "Marketplaces") {
+                    let ms = [["Mercado Livre", "ML", "#ffe36c", "42% das vendas", "Última sincronização hoje às 15:42"], ["Amazon", "a", "#f6b65d", "28% das vendas", "Última sincronização hoje às 15:40"], ["Shopee", "S", "#ff745c", "18% das vendas", "Última sincronização hoje às 15:38"], ["Magalu", "M", "#72a6ff", "12% das vendas", "Última sincronização hoje às 15:35"]];
+                    html = pageHead("Marketplaces", "Gerencie suas integrações e acompanhe a saúde dos canais.", `<button class="btn" onclick="notify('Assistente de conexão demonstrativo iniciado.')">＋ Conectar canal</button>`);
+                    html += `<div class="grid" style="grid-template-columns:repeat(2,minmax(0,1fr))">${ms.map(m => `<section class="card"><div class="market-card"><div class="market-logo" style="background:${m[2]}">${m[1]}</div><div class="market-info"><strong>${m[0]}</strong><small>${m[3]}</small></div><span class="status s-green">Conectado</span></div><div class="detailrow"><span>Status da integração</span><b style="color:var(--green)">Operacional</b></div><div class="detailrow"><span>Sincronização</span><span>${m[4]}</span></div><div style="display:flex;gap:8px;margin-top:14px"><button class="btn secondary small" onclick="notify('Configurações de ${m[0]} abertas.')">Configurar</button><button class="btn small" onclick="notify('Sincronização de ${m[0]} concluída!')">↻ Sincronizar</button></div></section>`).join("")}</div>`;
+                } else if (current === "Relatórios") {
+                    html = pageHead("Relatórios e análises", "Transforme os dados da sua operação em decisões melhores.", `<button class="btn secondary" onclick="notify('Relatório exportado (simulação).')">↓ Exportar relatório</button>`);
+                    html += `<div class="toolbar"><select class="field"><option>Este mês</option><option>Últimos 7 dias</option><option>Últimos 30 dias</option><option>Este ano</option></select><select class="field"><option>Todos os marketplaces</option><option>Mercado Livre</option><option>Amazon</option><option>Shopee</option></select></div><div class="grid stats">${[["Faturamento", "R$ 148.320"], ["Pedidos", "1.847"], ["Ticket médio", "R$ 80,30"], ["Crescimento", "+12,4%"]].map(x => `<div class="card"><div class="stat-top">${x[0]}</div><div class="stat-value">${x[1]}</div></div>`).join("")}</div><div class="grid two">${card("Evolução do faturamento", `<div class="chart">${[40, 54, 49, 77, 63, 92, 70, 100].map( (v, i) => `<div class="barcol"><div class="bar ${i === 7 ? "highlight" : ""}" style="height:${v}%"></div>${["S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8"][i]}</div>`).join("")}</div>`)}${card("Participação por canal", `<div style="font-size:12px;color:#74839b">Mercado Livre <b style="float:right">42%</b></div><div class="progress" style="margin:9px 0 17px"><span style="width:42%"></span></div><div style="font-size:12px;color:#74839b">Amazon <b style="float:right">28%</b></div><div class="progress" style="margin:9px 0 17px"><span style="width:28%;background:#e99a22"></span></div><div style="font-size:12px;color:#74839b">Shopee <b style="float:right">18%</b></div><div class="progress" style="margin:9px 0 17px"><span style="width:18%;background:#e45b52"></span></div><div style="font-size:12px;color:#74839b">Magalu <b style="float:right">12%</b></div><div class="progress" style="margin:9px 0 0"><span style="width:12%;background:#3981ec"></span></div>`)}</div><div class="card" style="margin-top:15px"><h3 class="card-title">Relatórios disponíveis</h3><div class="grid detailgrid">${["Desempenho de vendas", "Giro de estoque", "Rentabilidade por canal", "Produtos mais vendidos"].map(x => `<div class="detailrow"><span>${x}</span><button class="tablebtn" onclick="notify('${x}: relatório demonstrativo gerado.')">Gerar ↗</button></div>`).join("")}</div></div>`;
+                } else if (current === "DRE Gerencial") {
+                    html = pageHead("DRE Gerencial", `Visão estratégica de receitas, custos e resultado da operação. <span class="premium-tag">✦ MÓDULO ADICIONAL</span>`, `<div style="display:flex;gap:8px;align-items:center"><select class="field" id="drePeriod" onchange="notify('Período atualizado para '+this.value+'.')"><option>Novembro / 2026</option><option>Outubro / 2026</option><option>Setembro / 2026</option><option>3º trimestre / 2026</option></select><button class="btn secondary" onclick="notify('DRE exportada em formato demonstrativo.')">↓ Exportar DRE</button></div>`);
+                    html += `<div class="alert">✦ <b>Recurso adicional:</b> o DRE Gerencial é apresentado como um módulo premium que pode ser contratado separadamente para ampliar a inteligência financeira do UniMarket.</div>`;
+                    html += `<section class="card premium-hero" style="margin-bottom:15px"><div style="display:flex;justify-content:space-between;gap:20px;align-items:flex-start;flex-wrap:wrap"><div><div style="font-size:11px;color:#c3d2f1">RESULTADO LÍQUIDO DO PERÍODO</div><div class="stat-value" style="font-size:32px">R$ 38.460,00</div><div style="font-size:11px;color:#a9e9d1">↑ 16,8% em relação ao mês anterior</div></div><div style="text-align:right"><span class="premium-tag">✦ VISÃO EXECUTIVA</span><div style="font-size:10px;color:#c3d2f1;margin-top:12px">Margem líquida</div><div style="font-size:24px;font-weight:800">25,9%</div></div></div></section>`;
+                    html += `<div class="grid stats"><div class="card"><div class="stat-top">Receita bruta</div><div class="finance-kpi">R$ 148.320</div><span class="positive">↑ 12,4%</span></div><div class="card"><div class="stat-top">Custos de mercadoria</div><div class="finance-kpi">R$ 72.400</div><span class="sub">48,8% da receita</span></div><div class="card"><div class="stat-top">Despesas operacionais</div><div class="finance-kpi">R$ 25.760</div><span class="sub">17,4% da receita</span></div><div class="card"><div class="stat-top">Margem de contribuição</div><div class="finance-kpi">33,8%</div><span class="positive">↑ 2,1 p.p.</span></div></div>`;
+                    html += `<div class="grid two">${card("Demonstrativo do resultado · DRE", `<div class="tablewrap"><table class="dre-table"><thead><tr><th>DESCRIÇÃO</th><th>VALOR</th></tr></thead><tbody><tr><td><b>(+) Receita bruta de vendas</b></td><td>R$ 148.320,00</td></tr><tr><td>(−) Impostos e deduções</td><td class="dre-negative">R$ 11.700,00</td></tr><tr class="dre-total"><td>(=) Receita líquida</td><td>R$ 136.620,00</td></tr><tr><td>(−) Custo das mercadorias vendidas (CMV)</td><td class="dre-negative">R$ 72.400,00</td></tr><tr class="dre-total"><td>(=) Lucro bruto</td><td>R$ 64.220,00</td></tr><tr><td>(−) Despesas com marketplace e frete</td><td class="dre-negative">R$ 14.250,00</td></tr><tr><td>(−) Despesas administrativas</td><td class="dre-negative">R$ 11.510,00</td></tr><tr class="dre-total"><td>(=) Resultado operacional</td><td>R$ 38.460,00</td></tr><tr class="dre-total"><td>(=) Resultado líquido estimado</td><td class="dre-positive">R$ 38.460,00</td></tr></tbody></table></div><div class="sub" style="margin-top:12px">Valores fictícios para fins de prototipação acadêmica.</div>`)}${card("Composição dos custos e despesas", `<div class="donut-wrap"><div class="donut" style="background:conic-gradient(#2457e8 0 58%,#16b889 58% 78%,#f0a12b 78% 92%,#e45b62 92% 100%)"><div class="donut-center">R$ 110 mil<small>total de gastos</small></div></div><div class="legend"><div class="legend-item"><span class="legend-dot" style="background:#2457e8"></span>Mercadorias <b>58%</b></div><div class="legend-item"><span class="legend-dot" style="background:#16b889"></span>Marketplace/frete <b>20%</b></div><div class="legend-item"><span class="legend-dot" style="background:#f0a12b"></span>Administrativo <b>14%</b></div><div class="legend-item"><span class="legend-dot" style="background:#e45b62"></span>Outros <b>8%</b></div></div></div>`)}</div>`;
+                    html += `<div class="grid two">${card("Evolução do resultado líquido", `<div class="chart">${[38, 52, 45, 63, 76, 88].map( (v, i) => `<div class="barcol"><div class="bar ${i === 5 ? "highlight" : ""}" style="height:${v}%"></div>${["Jun", "Jul", "Ago", "Set", "Out", "Nov"][i]}</div>`).join("")}</div><div class="sub" style="margin-top:12px">Tendência mensal do resultado líquido (valores ilustrativos).</div>`)}${card("Indicadores de desempenho", `<div class="detailrow"><span>Margem bruta</span><b>47,0%</b></div><div class="detailrow"><span>Margem operacional</span><b>25,9%</b></div><div class="detailrow"><span>Despesas / receita líquida</span><b>18,9%</b></div><div class="detailrow"><span>Ponto de equilíbrio</span><b>R$ 83.500,00</b></div><div style="margin-top:15px"><span class="status s-green">Resultado positivo</span></div>`)}</div>`;
+                    html += `<div style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:15px;flex-wrap:wrap"><div class="sub">Módulo ilustrativo · Integração financeira e contábil não implementada.</div><button class="btn" onclick="notify('Solicitação de demonstração do módulo adicional registrada!')">Conhecer módulo completo ↗</button></div>`;
+                } else if (current === "Configurações") {
+                    html = pageHead("Configurações", "Personalize sua empresa e gerencie as preferências do UniMarket.");
+                    html += `<div class="grid" style="grid-template-columns:1fr 1fr"><section class="card"><h3 class="card-title">Dados da empresa</h3><div class="formgroup"><label>Nome da empresa</label><input class="field" value="UniMarket Comércio Digital Ltda."></div><div class="formgroup" style="margin-top:13px"><label>E-mail administrativo</label><input class="field" value="admin@unimarket.com.br"></div><div class="formgroup" style="margin-top:13px"><label>CNPJ</label><input class="field" value="12.345.678/0001-90"></div><button class="btn" style="margin-top:17px" onclick="notify('Dados da empresa salvos na demonstração.')">Salvar alterações</button></section><section class="card"><h3 class="card-title">Preferências do sistema</h3>${[["Notificações de pedidos", "Receber alertas de novos pedidos."], ["Sincronização automática", "Atualizar dados dos canais conectados."], ["Alertas de estoque baixo", "Avisar quando atingir o estoque mínimo."], ["Resumo diário por e-mail", "Receber resumo da operação."]].map(x => `<div class="detailrow"><div><b>${x[0]}</b><div class="sub" style="margin-top:4px">${x[1]}</div></div><input class="toggle" type="checkbox" checked></div>`).join("")}<button class="btn" style="margin-top:17px" onclick="notify('Preferências salvas!')">Salvar preferências</button></section><section class="card"><h3 class="card-title">Usuários e permissões</h3><div class="detailrow"><span>João Silva</span><b>Administrador</b></div><div class="detailrow"><span>Maria Oliveira</span><b>Operador</b></div><button class="btn secondary" style="margin-top:15px" onclick="notify('Gerenciamento de usuários demonstrativo.')">Gerenciar usuários</button></section><section class="card"><h3 class="card-title">Segurança</h3><div class="detailrow"><span>Autenticação em duas etapas</span><b style="color:var(--green)">Ativa</b></div><div class="detailrow"><span>Último acesso</span><b>Hoje, 09:14</b></div><button class="btn secondary" style="margin-top:15px" onclick="notify('Fluxo de alteração de senha demonstrativo.')">Alterar senha</button></section></div>`;
+                }
+                c.innerHTML = html;
+            }
+            function openModal(content) {
+                document.getElementById("modal").innerHTML = content;
+                document.getElementById("modalback").classList.add("show")
+            }
+            function closeModal() {
+                document.getElementById("modalback").classList.remove("show")
+            }
+            function openProductModal(p=null) {
+                let editing = !!p;
+                openModal(`<div class="modalhead"><h2>${editing ? "Editar produto" : "Cadastrar novo produto"}</h2><button class="iconbtn" onclick="closeModal()">✕</button></div><div class="formgrid"><div class="formgroup full"><label>Nome do produto *</label><input class="field" id="pname" value="${p?.name || ""}" placeholder="Ex.: Tênis esportivo"></div><div class="formgroup"><label>SKU *</label><input class="field" id="psku" value="${p?.sku || ""}" placeholder="TEN-100" ${editing ? "readonly" : ""}></div><div class="formgroup"><label>Categoria</label><select class="field" id="pcat">${["Calçados", "Bolsas", "Eletrônicos", "Acessórios", "Vestuário", "Esportes", "Móveis"].map(x => `<option ${p?.category === x ? "selected" : ""}>${x}</option>`).join("")}</select></div><div class="formgroup"><label>Preço de venda (R$) *</label><input class="field" id="pprice" type="number" step=".01" value="${p?.price ?? ""}" placeholder="0,00"></div><div class="formgroup"><label>Estoque inicial</label><input class="field" id="pstock" type="number" value="${p?.stock ?? 0}"></div><div class="formgroup full"><label>Marketplace</label><select class="field" id="pchannel" multiple style="height:92px"><option selected>Mercado Livre</option><option selected>Amazon</option><option>Shopee</option><option>Magalu</option></select><small style="color:#8996aa">Use Ctrl/Cmd para selecionar mais de um canal.</small></div></div><div class="modalfoot"><button class="btn secondary" onclick="closeModal()">Cancelar</button><button class="btn" onclick="saveProduct(${editing ? "true" : "false"})">Salvar produto</button></div>`)
+            }
+            function saveProduct(editing) {
+                let name = document.getElementById("pname").value.trim()
+                  , sku = document.getElementById("psku").value.trim()
+                  , price = Number(document.getElementById("pprice").value)
+                  , stock = Number(document.getElementById("pstock").value);
+                if (!name || !sku || !price || stock < 0) {
+                    notify("Preencha nome, SKU, preço e estoque corretamente.");
+                    return
+                }
+                let channels = [...document.getElementById("pchannel").selectedOptions].map(o => o.value);
+                let p = {
+                    name,
+                    sku,
+                    price,
+                    stock,
+                    category: document.getElementById("pcat").value,
+                    channels,
+                    status: stock === 0 ? "Inativo" : stock <= 5 ? "Estoque baixo" : "Ativo"
+                };
+                if (editing) {
+                    let i = products.findIndex(x => x.sku === sku);
+                    products[i] = p
+                } else {
+                    if (products.some(x => x.sku === sku)) {
+                        notify("Já existe um produto com esse SKU.");
+                        return
+                    }
+                    products.unshift(p)
+                }
+                closeModal();
+                filter = "Todos";
+                query = "";
+                renderPage();
+                notify(editing ? "Produto atualizado com sucesso!" : "Produto cadastrado com sucesso!")
+            }
+            function editProduct(sku) {
+                let p = products.find(x => x.sku === sku);
+                openProductModal(p)
+            }
+            function openProduct(sku) {
+                let p = products.find(x => x.sku === sku);
+                selectedProduct = p;
+                openModal(`<div class="modalhead"><h2>Detalhes do produto</h2><button class="iconbtn" onclick="closeModal()">✕</button></div><div style="background:#edf3ff;padding:20px;border-radius:12px;text-align:center;font-size:30px">📦</div><h3>${p.name}</h3><div class="sub">SKU ${p.sku} · ${p.category}</div><div class="detailrow"><span>Preço</span><b>${brl(p.price)}</b></div><div class="detailrow"><span>Estoque disponível</span><b>${p.stock} unidades</b></div><div class="detailrow"><span>Status</span><span class="status ${statusClass(p.status)}">${p.status}</span></div><div class="detailrow"><span>Canais</span><b>${p.channels.join(", ")}</b></div><div class="modalfoot"><button class="btn secondary" onclick="closeModal()">Fechar</button><button class="btn" onclick="closeModal();editProduct('${p.sku}')">Editar produto</button></div>`)
+            }
+            function openOrder(id) {
+                let o = orders.find(x => x.id === id);
+                selectedOrder = o;
+                openModal(`<div class="modalhead"><h2>Pedido ${o.id}</h2><button class="iconbtn" onclick="closeModal()">✕</button></div><div class="detailrow"><span>Cliente</span><b>${o.client}</b></div><div class="detailrow"><span>Marketplace</span><b>${o.market}</b></div><div class="detailrow"><span>Data</span><b>${o.date}</b></div><div class="detailrow"><span>Produto</span><b>${o.product}</b></div><div class="detailrow"><span>Quantidade</span><b>${o.qty}</b></div><div class="detailrow"><span>Valor total</span><b>${brl(o.value)}</b></div><div class="detailrow"><span>Status atual</span><span class="status ${statusClass(o.status)}">${o.status}</span></div><div class="formgroup" style="margin-top:16px"><label>Atualizar status</label><select class="field" id="orderStatus">${["Processando", "Em trânsito", "Entregue", "Cancelado"].map(s => `<option ${s === o.status ? "selected" : ""}>${s}</option>`).join("")}</select></div><div class="modalfoot"><button class="btn secondary" onclick="closeModal()">Fechar</button><button class="btn" onclick="saveOrderStatus('${o.id}')">Salvar status</button></div>`)
+            }
+            function saveOrderStatus(id) {
+                let o = orders.find(x => x.id === id);
+                o.status = document.getElementById("orderStatus").value;
+                closeModal();
+                renderPage();
+                notify("Status do pedido atualizado!")
+            }
+            function openMovement() {
+                openModal(`<div class="modalhead"><h2>Movimentação de estoque</h2><button class="iconbtn" onclick="closeModal()">✕</button></div><div class="formgroup"><label>Produto</label><select class="field" id="movsku">${products.map(p => `<option value="${p.sku}">${p.name}</option>`).join("")}</select></div><div class="formgrid" style="margin-top:14px"><div class="formgroup"><label>Tipo</label><select class="field" id="movtype"><option>Entrada</option><option>Saída</option></select></div><div class="formgroup"><label>Quantidade</label><input class="field" id="movqty" type="number" min="1" value="1"></div></div><div class="modalfoot"><button class="btn secondary" onclick="closeModal()">Cancelar</button><button class="btn" onclick="saveMovement()">Confirmar movimentação</button></div>`)
+            }
+            function saveMovement() {
+                let p = products.find(x => x.sku === document.getElementById("movsku").value)
+                  , q = Number(document.getElementById("movqty").value)
+                  , type = document.getElementById("movtype").value;
+                if (!q || q < 1) {
+                    notify("Informe uma quantidade válida.");
+                    return
+                }
+                if (type === "Saída" && q > p.stock) {
+                    notify("Estoque insuficiente para essa saída.");
+                    return
+                }
+                p.stock += type === "Entrada" ? q : -q;
+                p.status = p.stock === 0 ? "Inativo" : p.stock <= 5 ? "Estoque baixo" : "Ativo";
+                closeModal();
+                renderPage();
+                notify("Movimentação registrada com sucesso!")
+            }
+            function applyPrice() {
+                let sku = document.getElementById("priceSku").value
+                  , p = products.find(x => x.sku === sku)
+                  , price = Number(document.getElementById("newPrice").value);
+                if (!price || price <= 0) {
+                    notify("Informe um preço válido.");
+                    return
+                }
+                p.price = price;
+                notify("Preço atualizado no protótipo. Nenhum canal externo foi alterado.");
+                renderPage()
+            }
+            function renderNav() {
+                let el = document.getElementById("nav");
+                el.innerHTML = navGroups.map( ([g,items]) => `<div class="nav-label">${g}</div>` + items.map(n => `<button class="${current === n ? "active" : ""}" onclick="go('${n}')"><span class="ico">${icons[n]}</span><span class="navtext">${n}</span></button>`).join("")).join("")
+            }
+        </script>
+    </body>
+</html>
